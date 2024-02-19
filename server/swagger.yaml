@@ -1,0 +1,29 @@
+openapi: 3.0.0
+info: 
+  title : Hymn Song
+  description: Hymn song API documentation
+  version: 1.0.0
+  contact:
+    name: Mang 
+    email: ngtouthang96@gmail.com
+    url: https://github.com/MTouthang
+  externalDocs:
+    description: Documentation on GitHub
+    url: https://github.com/your-username/your-repo
+
+# TODO: fix or integrate with production url
+servers:
+  - url: "{protocol}://localhost:8081/api/{version}"
+    description: "This is the  version of our application "
+ 
+    variables:
+      version:
+        enum:
+          - v1 
+          - v2
+        default: v1
+      protocol:
+        enum:
+          - http
+          - https 
+        default: http
