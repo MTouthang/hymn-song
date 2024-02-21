@@ -1,4 +1,4 @@
-import dbConnection from "./config/db.config";
+import dbConnection from "./configs/db.config";
 import app from "./app"
 
 
