@@ -1,7 +1,12 @@
 import mongoose, { InferSchemaType, model } from 'mongoose'
 import { ISong } from 'types'
 
-const songSchema = new mongoose.Schema <ISong> ({
+const lyricSchema = new mongoose.Schema <ISong> ({
+  hymnNumber: {
+    type: Number,
+    required: [true, "Hymn number should be provided"],
+    unique: true
+  },
   title: {
     type: String,
     required: [true, 'Song title is required'],
@@ -27,6 +32,11 @@ const songSchema = new mongoose.Schema <ISong> ({
     },
     
   ],
+  chorus: {
+    type: String, 
+    required: [true, "chorus is required"]
+
+  },
   composer: {
     type: String,
     minlength: [5, 'Composer name must be at-least 5 characters long'],
@@ -35,7 +45,7 @@ const songSchema = new mongoose.Schema <ISong> ({
 
 })
 
-type songSchema = InferSchemaType<typeof songSchema>
+type lyricSchema = InferSchemaType<typeof lyricSchema>
 
-const Song = model<songSchema>('Song', songSchema)
-export default Song
+const lyric = model<lyricSchema>('Lyric', lyricSchema)
+export default lyric

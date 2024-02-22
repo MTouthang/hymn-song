@@ -8,8 +8,10 @@ interface Verse {
 }
 
 export interface ISong {
+  hymnNumber: number
   title: string 
   key: string
   verses: Verse []
   composer: string
+  chorus: string
 }
