@@ -1,7 +1,7 @@
 import mongoose, { InferSchemaType, model } from 'mongoose'
-import { ISong } from 'types'
+import { ILyric } from 'types'
 
-const lyricSchema = new mongoose.Schema <ISong> ({
+const lyricSchema = new mongoose.Schema <ILyric> ({
   hymnNumber: {
     type: Number,
     required: [true, "Hymn number should be provided"],

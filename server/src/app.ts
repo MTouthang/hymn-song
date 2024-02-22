@@ -7,6 +7,7 @@ import fs from "fs"
 import YAML from 'yaml'
 import morgan from 'morgan';
 import errorMiddleware from './middlewares/error.middleware';
+import lyricRoutes from './routes/lyric.route';
 const app = express();
 
 // swagger
@@ -27,6 +28,9 @@ app.get('/api/v1/health-check', (req, res) => {
         message: "All Good :)"
     })
 });
+
+// lyric route 
+app.use("/api/v1/lyric", lyricRoutes)
 
 // CatchAll - 404
 app.all('*', (req, res) => {

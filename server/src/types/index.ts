@@ -7,7 +7,7 @@ interface Verse {
   lyrics: string
 }
 
-export interface ISong {
+export interface ILyric {
   hymnNumber: number
   title: string 
   key: string
