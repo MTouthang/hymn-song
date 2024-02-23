@@ -1,6 +1,6 @@
 import {config} from 'dotenv'   
 config()
-
+import cors from "cors"
 import express from 'express';
 import swaggerUi from "swagger-ui-express"
 import fs from "fs"
@@ -10,13 +10,16 @@ import errorMiddleware from './middlewares/error.middleware';
 import lyricRoutes from './routes/lyric.route';
 const app = express();
 
+app.use(cors())
 // swagger
 const file = fs.readFileSync("./swagger.yaml", "utf8");
 const swaggerDocument = YAML.parse(file);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // middleware 
+
 app.use(express.json())
+
 
 // TODO: replace winston logger
 app.use(morgan("dev"))

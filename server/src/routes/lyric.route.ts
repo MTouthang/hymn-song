@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { createLyric } from '../controller/lyric.controller';
+import { createLyric, deleteLyric, getAllLyrics } from '../controller/lyric.controller';
 
 
 const lyricRoutes = Router();
 
 
-lyricRoutes.route('/').post(createLyric); 
+lyricRoutes.route('/').post(createLyric).get(getAllLyrics)
+lyricRoutes.delete('/:lyricId', deleteLyric)
+
 
 export default lyricRoutes;

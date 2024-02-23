@@ -22,7 +22,8 @@ const lyricSchema = new mongoose.Schema <ILyric> ({
     {
       verseNumber:{
         type: Number,
-        required: [true, "Verse number is required!"]
+        required: [true, "Verse number is required!"],
+        unique: true
       },
       
         lyrics: {
@@ -34,7 +35,6 @@ const lyricSchema = new mongoose.Schema <ILyric> ({
   ],
   chorus: {
     type: String, 
-    required: [true, "chorus is required"]
 
   },
   composer: {

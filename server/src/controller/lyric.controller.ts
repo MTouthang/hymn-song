@@ -3,6 +3,7 @@ import asyncHandler from "../middlewares/asyncHandler.middleware"
 import Lyric from "../models/lyric.model";
 import { ILyric } from "types";
 import AppError from "../utils/appErr.utils";
+import lyric from "../models/lyric.model";
 
 /**
  *
@@ -17,7 +18,7 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
   const { hymnNumber, title, key, verses, chorus, composer } = req.body;
 
   // Check if any required fields are missing
-  const requiredFields = ['hymnNumber', 'title','verses', 'chorus'];
+  const requiredFields = ['hymnNumber', 'title','verses'];
   if (requiredFields.some(field => !req.body[field])) {
    return next(new AppError('Missing required fields', 400)) 
   }
@@ -51,3 +52,56 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
     lyricData: savedLyric
   });
 });
+
+/**
+ *
+ * @getAllLyrics
+ * @desc   get all lyrics
+ * @ROUTE  GET {{URL}}/api/v1/lyric
+ * @return all lyric data with success status and message
+ * @ACCESS Public 
+ *
+ */
+
+export const getAllLyrics = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+  const lyrics = await Lyric.find()
+  
+  if(!lyrics){
+    return next(new AppError("Not able to fetch lyric at the moment!", 500))
+  }
+
+  res.status(200).json({
+    success: true, 
+    message: "All lyrics fetch successfully",
+    lyrics
+  })
+})
+
+/**
+ *
+ * @deleteLyric
+ * @desc   delete the hymn lyric with the provided ID
+ * @ROUTE  Delete {{URL}}/api/v1/lyric
+ * @return deleted data with success status and message
+ * @ACCESS Public 
+ *
+ */
+
+export const deleteLyric = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+  const {lyricId} = req.params 
+
+  const lyric = await Lyric.findById(lyricId)
+
+  if(!lyric){
+    return next(new AppError("Lyric data is not available for the provided lyric ID", 400))
+  }
+
+  const data = await Lyric.findByIdAndDelete(lyricId)
+
+  return res.status(200).json({
+    success: true, 
+    message: "Lyric data deleted successfully",
+    data
+  })
+})

@@ -9,11 +9,11 @@ info:
     url: https://github.com/MTouthang
   externalDocs:
     description: Documentation on GitHub
-    url: https://github.com/your-username/your-repo
+    url: https://github.com/Mtouthang/hymn-song
 
 # TODO: fix or integrate with production url
 servers:
-  - url: "{protocol}://localhost:8081/api/{version}"
+  - url: "{protocol}://localhost:8080/api/{version}"
     description: "This is the  version of our application "
  
     variables:
@@ -27,3 +27,174 @@ servers:
           - http
           - https 
         default: http
+
+paths:
+  # user signup - 
+  /lyric:
+    post: 
+      tags: 
+        - Hymn Lyric
+      summary: Create or create lyric
+      description: creating or adding of new lyric
+      consumes:
+        application/json
+      produces:
+        application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hymnNumber:
+                  type: number
+                  description: The number of the hymn.
+                title:
+                  type: string
+                  description: The title of the hymn.
+                key:
+                  type: string
+                  description: The key of the hymn (optional).
+                verses:
+                  type: array
+                  items:
+                    type: object
+                    properties: 
+                      verseNumber:
+                        type: number
+                        description: The number of the verse
+                      lyrics: 
+                        type: string 
+                        description: the verse of the hymn song
+
+                  description: Array of verse texts.
+                chorus:
+                  type: string
+                  description: The chorus of the hymn.
+                composer:
+                  type: string
+                  description: The composer of the hymn (optional).
+      responses:
+          "201":
+            description: Return lyric object data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 201
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      default: successfully created or added the hymn lyric
+                    data:
+                      type: object
+                      properties:
+                        hymnNumber:
+                          type: number
+                          example: 1
+                        title:
+                          type: string
+                          example: "title of the hymn"
+                        key:
+                          type: string
+                          example: "Doh is. C. (Psalms 126:1)"
+                        verses:
+                          type: array
+                          example: [{verseNumber: 1, lyrics: "verse of the song lyric"}]
+                        chorus: 
+                          type: string
+                          example: "chorus of the hymn song"
+                        _id:
+                          type: string 
+                          example: 64a3ffef83e36e95ec51e6333
+                        composer:
+                          type: string 
+                          example: "John doe"
+                        createdAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        updatedAt:
+                          type: date
+                          example: 2023-07-04T11:18:07.265+00:00
+                        __v: 
+                          type: number
+                          example: 0       
+          "400":
+            description: Bad user request 
+            content:
+              application/json:
+                schema: 
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      example: 400
+                    success: 
+                      type: boolean
+                      default: false
+                    message:
+                      type: string
+                      example: Missing required field
+          "409":
+            description: Internal server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      default: 500
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string
+                      default: The hymn lyric already exists in the database
+          "500":
+            description: Internal server Error, Failed to save hymn lyric data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    statusCode:
+                      type: number
+                      default: 500
+                    success:
+                      type: boolean
+                      default : false
+                    message:
+                      type: string
+                      default: Failed to save hymn lyric data
+    get:
+      summary: Get All lyric Data
+      description: Retrieve all data from the system
+      responses:
+        '200':
+          description: A list of all data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique identifier of the data
+                    name:
+                      type: string
+                      description: The name of the data
+                    description:
+                      type: string
+                      description: A description of the data
+                    # Add more properties as needed
+        '500':
+          description: Internal server error
