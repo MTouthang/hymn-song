@@ -105,3 +105,56 @@ export const deleteLyric = asyncHandler(async(req: Request, res: Response, next:
     data
   })
 })
+
+/**
+ *
+ * @updateLyric
+ * @desc   update the lyric 
+ * @ROUTE  Delete {{URL}}/api/v1/lyric/:lyricId
+ * @return updated lyric data with success status and message
+ * @ACCESS Public 
+ *
+ */
+export const updateLyric = asyncHandler (async (req: Request, res: Response, next: NextFunction)  => {
+
+  const {lyricId} = req.params 
+
+  const updateLyric = await Lyric.findByIdAndUpdate(
+    lyricId, 
+    req.body, {new: true, omitUndefined: true}
+  )
+
+  if(!updateLyric){
+    return next(new AppError("Lyric not able to update at the moment", 400))
+  }
+
+ return res.status(200).json({
+  success: true,
+  message: "lyric data updated", 
+  updateLyric
+ })
+})
+
+/**
+ *
+ * @getLyricById
+ * @desc   get a particular lyric by id
+ * @ROUTE  get {{URL}}/api/v1/lyric/:lyricId
+ * @return particular lyric data with success status and message
+ * @ACCESS Public 
+ *
+ */
+export const getLyricById = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+  const {lyricId} = req.params 
+  const lyric  = await Lyric.findById(lyricId)
+
+  if(!lyric){
+    return next(new AppError("lyric not found with the provided data", 400))
+  }
+
+  return res.status(200).json({
+    success: true, 
+    message: "Lyric fetch successfully", 
+    lyric
+  })
+})
