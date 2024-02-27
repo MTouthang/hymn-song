@@ -23,6 +23,13 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
    return next(new AppError('Missing required fields', 400)) 
   }
 
+  // Check for duplicate verse numbers or same verse number
+  const verseNumbers = verses.map((verse: { verseNumber: number }) => verse.verseNumber);
+  const hasDuplicates = new Set(verseNumbers).size !== verseNumbers.length;
+  if (hasDuplicates) {
+      return next(new AppError("Duplicate verse numbers are not allowed", 400));
+    }
+
   // Check if the hymn lyric already exists
   const existingLyric = await Lyric.findOne({ hymnNumber });
   if (existingLyric) {
@@ -117,22 +124,43 @@ export const deleteLyric = asyncHandler(async(req: Request, res: Response, next:
  */
 export const updateLyric = asyncHandler (async (req: Request, res: Response, next: NextFunction)  => {
 
+  const {hymnNumber, title, key, verses, chorus, composer} = req.body
   const {lyricId} = req.params 
 
-  const updateLyric = await Lyric.findByIdAndUpdate(
-    lyricId, 
-    req.body, {new: true, omitUndefined: true}
-  )
+ // Fetch existing lyrics and check for duplicate verse numbers
+ const existingLyrics = await Lyric.findById(lyricId);
+ if (!existingLyrics) {
+   return next(new AppError('Lyric not found', 404));
+ }
 
-  if(!updateLyric){
-    return next(new AppError("Lyric not able to update at the moment", 400))
-  }
+ const newVerseNumbers = verses?.map((verse: { verseNumber: number }) => verse.verseNumber);
+ const hasDuplicates = new Set(newVerseNumbers).size !== newVerseNumbers?.length;
+ if (hasDuplicates) {
+   return next(new AppError('Duplicate verse numbers are not allowed', 400));
+ }
 
- return res.status(200).json({
-  success: true,
-  message: "lyric data updated", 
-  updateLyric
- })
+ // Prepare the updated lyric object
+ const updatedLyric: ILyric = {
+   hymnNumber: hymnNumber ?? existingLyrics.hymnNumber,
+   title: title ?? existingLyrics.title,
+   key: key ?? existingLyrics.key,
+   verses: verses ?? existingLyrics.verses,
+   chorus: chorus ?? existingLyrics.chorus,
+   composer: composer ?? existingLyrics.composer
+ };
+
+ // Update the lyric in the database
+ const updatedLyricData = await Lyric.findByIdAndUpdate(lyricId, updatedLyric, { new: true, omitUndefined: true });
+ if (!updatedLyricData) {
+   return next(new AppError('Lyric not able to update at the moment', 400));
+ }
+
+ // Respond with success message and updated lyric data
+ res.status(200).json({
+   success: true,
+   message: 'Lyric data updated',
+   updatedLyricData
+ });
 })
 
 /**
