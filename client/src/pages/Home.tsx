@@ -1,6 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios, { AxiosError } from 'axios';
+import { Link } from 'react-router-dom';
+
+import { IData, IError } from '../types';
 
 const Home: React.FC = () => {
+  const [data, setData] = useState<IData | undefined>();
+  const [error, setError] = useState<IError | undefined>();
+
+  const getLyricData = async () => {
+    try {
+      const res = await axios.get<IData>('http://localhost:8080/api/v1/lyric');
+      setData(res.data);
+    } catch (err) {
+      const errorObject = err as AxiosError;
+      setError({
+        message: errorObject.message,
+        code: errorObject.code,
+      });
+    }
+  };
+
+  useEffect(() => {
+    getLyricData();
+  }, []);
+
   return (
     <>
       <section className="text-gray-600 body-font">
@@ -24,16 +48,29 @@ const Home: React.FC = () => {
           <h2 className="py-5"> HOUBUNG LA </h2>
           <div className="flex flex-col w-5/6 ">
             <div>
-              <ul className="space-y-2">
-                <li className="flex items-center ">
-                  <span className="mr-2 text-gray-500">1.</span>
-                  <span className="font-medium">John Doe</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-gray-500">2.</span>
-                  <span className="font-medium">Jane Smith</span>
-                </li>
-              </ul>
+              <div>
+                {error ? (
+                  <>
+                    <p>Loading data error: {error.message}</p>
+                  </>
+                ) : data ? (
+                  <ul className="space-y-2">
+                    {data?.lyrics.map((item) => (
+                      <li key={item._id} className="flex items-center ">
+                        <span className="mr-2 text-gray-500">
+                          {item.hymnNumber}.
+                        </span>
+                        <Link to={`lyric/${item._id}`}>
+                          {' '}
+                          {item.title.toUpperCase()}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p> Loading data...</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
