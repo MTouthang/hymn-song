@@ -69,10 +69,27 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
  * @ACCESS Public 
  *
  */
-
+// TODO: Test me and add pagination
 export const getAllLyrics = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
-  const lyrics = await Lyric.find()
+  type searchType = {
+    title?:object ,
+    hymnNumber?: number
+  }
+  let lyrics 
+
+  const searchQuery:searchType = {}
+
+  const {title, hymnNumber} = req.query
+
+
+  if(title){
+   searchQuery.title = {$regex: title, $options: 'i'} 
+  } else {
+    searchQuery.hymnNumber = Number(hymnNumber)
+  }
+
+  lyrics = await Lyric.find(searchQuery)
   
   if(!lyrics){
     return next(new AppError("Not able to fetch lyric at the moment!", 500))
@@ -186,3 +203,4 @@ export const getLyricById = asyncHandler(async(req: Request, res: Response, next
     lyric
   })
 })
+

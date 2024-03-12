@@ -42,7 +42,6 @@ const lyricSchema = new mongoose.Schema <ILyric> ({
     minlength: [5, 'Composer name must be at-least 5 characters long'],
     maxlength: [30, 'Composer name cannot be more than 50 characters'],
   }
-
 })
 
 type lyricSchema = InferSchemaType<typeof lyricSchema>
