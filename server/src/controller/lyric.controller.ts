@@ -70,7 +70,6 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
  * @ACCESS Public 
  *
  */
-// TODO: Test me and add pagination
 export const getAllLyrics = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
   const searchQuery: searchType = {}
@@ -117,7 +116,9 @@ export const getAllLyrics = asyncHandler(async (req: Request, res: Response, nex
   res.status(200).json({
     success: true,
     message: "All lyrics fetch successfully",
-    lyricResults
+    previous: lyricResults.previous,
+    next: lyricResults.next,
+    lyrics: lyricResults.lyrics
   })
 })
 
