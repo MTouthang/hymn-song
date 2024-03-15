@@ -1,9 +1,10 @@
-import {Request, Response, NextFunction } from "express";
+import {Request, Response, NextFunction, query } from "express";
 import asyncHandler from "../middlewares/asyncHandler.middleware"
 import Lyric from "../models/lyric.model";
-import { ILyric } from "types";
+import { ILyric, lyricResultI } from "types";
 import AppError from "../utils/appErr.utils";
-import lyric from "../models/lyric.model";
+
+import { searchType } from "types";
 
 /**
  *
@@ -72,35 +73,55 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
 // TODO: Test me and add pagination
 export const getAllLyrics = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
-  type searchType = {
-    title?:object ,
-    hymnNumber?: number
+  const searchQuery: searchType = {}
+
+  const { title, hymnNumber, page, limit } = req.query
+  const PAGE: number = Number(page) || 1
+  const LIMIT: number = Number(limit) || 10
+
+  const startIndex = (PAGE - 1) * LIMIT
+
+  if (title) {
+    searchQuery.title = { $regex: title.toString(), $options: 'i' }
   }
-  let lyrics 
 
-  const searchQuery:searchType = {}
-
-  const {title, hymnNumber} = req.query
-
-
-  if(title){
-   searchQuery.title = {$regex: title, $options: 'i'} 
-  } else {
+  if (hymnNumber) {
     searchQuery.hymnNumber = Number(hymnNumber)
   }
 
-  lyrics = await Lyric.find(searchQuery)
-  
-  if(!lyrics){
+  const totalLyrics: number = await Lyric.find(searchQuery).countDocuments()
+
+  if (!totalLyrics) {
     return next(new AppError("Not able to fetch lyric at the moment!", 500))
   }
 
+  const lyricResults: lyricResultI = {}
+  const totalPages = Math.ceil(totalLyrics / LIMIT)
+
+  if (PAGE < totalPages) {
+    lyricResults.next = {
+      pageNumber: PAGE + 1,
+      limit: LIMIT
+    }
+  }
+
+  if (PAGE > 1) {
+    lyricResults.previous = {
+      pageNumber: PAGE - 1,
+      limit: LIMIT
+    }
+  }
+
+  lyricResults.lyrics = await Lyric.find(searchQuery).skip(startIndex).limit(LIMIT).sort({ hymnNumber: 1 })
+
   res.status(200).json({
-    success: true, 
+    success: true,
     message: "All lyrics fetch successfully",
-    lyrics
+    lyricResults
   })
 })
+
+
 
 /**
  *
