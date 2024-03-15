@@ -10,8 +10,8 @@ const Lyric: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-center h-screen mx-auto ">
-        <div className="w-32 border-2 bg-dark-50">
+      <div className="flex items-center justify-center mx-auto border-2 border-dark-500">
+        <div className="items-center w-32 border-2 bg-dark-50">
           <ul>
             <li>1. fda...</li>
             <li>1. fda..</li>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
+import { ILyricData } from '../types';
 
 import { IData, IError } from '../types';
 
@@ -11,6 +12,7 @@ const Home: React.FC = () => {
   const getLyricData = async () => {
     try {
       const res = await axios.get<IData>('http://localhost:8080/api/v1/lyric');
+      console.log(res);
       setData(res.data);
     } catch (err) {
       const errorObject = err as AxiosError;
@@ -18,6 +20,17 @@ const Home: React.FC = () => {
         message: errorObject.message,
         code: errorObject.code,
       });
+    }
+  };
+
+  const handleDataToLocalStorage = async (lyricId: string) => {
+    try {
+      const res = await axios.get<ILyricData>(
+        `http://localhost:8080/api/v1/lyric/${lyricId}`
+      );
+      localStorage.setItem('lyric', JSON.stringify(res.data.lyric));
+    } catch (err) {
+      console.log('error', err);
     }
   };
 
@@ -60,7 +73,10 @@ const Home: React.FC = () => {
                         <span className="mr-2 text-gray-500">
                           {item.hymnNumber}.
                         </span>
-                        <Link to={`lyric/${item._id}`}>
+                        <Link
+                          onClick={() => handleDataToLocalStorage(item._id)}
+                          to={`lyric/${item._id}`}
+                        >
                           {' '}
                           {item.title.toUpperCase()}
                         </Link>
