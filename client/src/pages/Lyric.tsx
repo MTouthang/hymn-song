@@ -1,33 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ILyric } from '../types';
 
-const Lyric: React.FC = () => {
-  const inputString =
-    'Eisem’a Eihuhhingpau chu vahchoiyun, Lhan le thina konin eilhattauve ; A let Aloupi jabol’un vahchoiyun, Huhhing hat loupi chungnung tah ahi.';
+interface LyricProps {
+  data: ILyric; // Explicitly type the data prop
+}
+const Lyric: React.FC<LyricProps> = ({ data }) => {
+  const [slide, setSlide] = useState<string>(data.verses[0].lyrics);
 
-  const formattedString = inputString.split(/[,;]/).join(',\n');
+  // const inputString =
+  //   'Eisem’a Eihuhhingpau chu vahchoiyun, Lhan le thina konin eilhattauve ; A let Aloupi jabol’un vahchoiyun, Huhhing hat loupi chungnung tah ahi.';
 
-  console.log(formattedString);
+  // const formattedString = inputString.split(/[,;]/).join(',\n');
+
+  const handleSlide = (item: string) => {
+    setSlide(item);
+  };
+  console.log(data);
 
   return (
     <>
-      <div className="flex items-center justify-center mx-auto border-2 border-dark-500">
-        <div className="items-center w-32 border-2 bg-dark-50">
-          <ul>
-            <li>1. fda...</li>
-            <li>1. fda..</li>
-            <li>1. fda...</li>
-            <li>Home</li>
+      <div className="flex items-center mx-auto border-2 border-dark-500">
+        <div className="w-32 bg-dark-50">
+          <ul className="justify-start text-left">
+            {data.verses.map((item) => (
+              <li
+                key={item.verseNumber}
+                onClick={() => handleSlide(item.lyrics)}
+              >
+                {item.verseNumber}. {item.lyrics.slice(0, 10)}...
+              </li>
+            ))}
+            <li onClick={() => setSlide(data.chorus)}>chorus</li>
+            <Link to={'/'}> Home</Link>
           </ul>
         </div>
         <div className="w-full mx-auto border-2 bg-dark-50">
           <p className="font-bold leading-10 md:text-6xl 2xl:text-8xl">
-            {formattedString.split('\n').map((line, index) => (
-              <React.Fragment key={index}>
-                <div className="h-10"> </div>
-                {line}
-                <br />
-              </React.Fragment>
-            ))}
+            {slide}
           </p>
         </div>
       </div>

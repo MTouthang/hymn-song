@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ILyric } from '../types';
 import Lyric from './Lyric';
 
 export const Title: React.FC = () => {
   const [startSlide, setStartSlide] = useState<boolean>(false);
+  const [lyricData, setLyricData] = useState<ILyric | null>();
 
-  // Get the stored lyric from local storage and parse it as ILyric
-  const storedLyric: ILyric | null = JSON.parse(
-    localStorage.getItem('lyric') || 'null'
-  );
-
-  console.log(startSlide);
+  useEffect(() => {
+    // Get the stored lyric from local storage and parse it as ILyric
+    const storedLyric: ILyric | null = JSON.parse(
+      localStorage.getItem('lyric') || 'null'
+    );
+    setLyricData(storedLyric);
+  }, [JSON.parse(localStorage.getItem('lyric') || 'null')]);
 
   return (
     <div className="container flex items-center h-screen mx-auto ">
@@ -23,11 +25,13 @@ export const Title: React.FC = () => {
           Slide-mode
         </p>
 
-        {startSlide ? (
-          <Lyric />
-        ) : (
+        {/* Render Lyric component if startSlide is true and lyricData is not null */}
+        {startSlide && lyricData && <Lyric data={lyricData} />}
+
+        {/* Render title if startSlide is false and lyricData is not null */}
+        {!startSlide && lyricData && (
           <h1 className="font-bold text-center md:text-6xl 2xl:text-8xl">
-            {storedLyric?.hymnNumber}. {storedLyric?.title.toUpperCase()}
+            {lyricData.hymnNumber}. {lyricData.title?.toUpperCase()}
           </h1>
         )}
 

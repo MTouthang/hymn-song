@@ -12,7 +12,7 @@ const Home: React.FC = () => {
   const getLyricData = async () => {
     try {
       const res = await axios.get<IData>('http://localhost:8080/api/v1/lyric');
-      console.log(res);
+
       setData(res.data);
     } catch (err) {
       const errorObject = err as AxiosError;
@@ -28,6 +28,7 @@ const Home: React.FC = () => {
       const res = await axios.get<ILyricData>(
         `http://localhost:8080/api/v1/lyric/${lyricId}`
       );
+
       localStorage.setItem('lyric', JSON.stringify(res.data.lyric));
     } catch (err) {
       console.log('error', err);
