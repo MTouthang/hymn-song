@@ -16,7 +16,7 @@ export const Title: React.FC = () => {
   }, [JSON.parse(localStorage.getItem('lyric') || 'null')]);
 
   return (
-    <div className="container flex items-center h-screen mx-auto ">
+    <div className="flex items-center justify-center w-full h-screen py-4 mx-auto ">
       <div className="w-full mx-auto text-center bg-dark-50 ">
         <p
           onClick={() => setStartSlide(!startSlide)}

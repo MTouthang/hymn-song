@@ -42,7 +42,7 @@ const Home: React.FC = () => {
   return (
     <>
       <section className="text-gray-600 body-font">
-        <div className="container flex flex-col items-center justify-center px-5 py-24 mx-auto">
+        <div className="flex flex-col items-center justify-center px-5 py-24 mx-auto ">
           <div className="flex items-end justify-center w-full">
             <div className="relative w-2/4 mr-4 text-left lg:w-full xl:w-1/2 md:w-full">
               <input

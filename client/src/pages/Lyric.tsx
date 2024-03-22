@@ -8,11 +8,6 @@ interface LyricProps {
 const Lyric: React.FC<LyricProps> = ({ data }) => {
   const [slide, setSlide] = useState<string>(data.verses[0].lyrics);
 
-  // const inputString =
-  //   'Eisem’a Eihuhhingpau chu vahchoiyun, Lhan le thina konin eilhattauve ; A let Aloupi jabol’un vahchoiyun, Huhhing hat loupi chungnung tah ahi.';
-
-  // const formattedString = inputString.split(/[,;]/).join(',\n');
-
   const handleSlide = (item: string) => {
     setSlide(item);
   };
@@ -20,9 +15,9 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
 
   return (
     <>
-      <div className="flex items-center mx-auto border-2 border-dark-500">
-        <div className="w-32 bg-dark-50">
-          <ul className="justify-start text-left">
+      <div className="flex items-center w-full py-10 mx-auto 2xl:w-5/6 border-dark-100 ">
+        <div className="items-center justify-center w-32 2xl:w-40 bg-dark-50 ">
+          <ul className="items-center text-left">
             {data.verses.map((item) => (
               <li
                 key={item.verseNumber}
@@ -35,9 +30,14 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
             <Link to={'/'}> Home</Link>
           </ul>
         </div>
-        <div className="w-full mx-auto border-2 bg-dark-50">
-          <p className="font-bold leading-10 md:text-6xl 2xl:text-8xl">
-            {slide}
+        <div className="w-full mx-auto text-center ">
+          <p className="font-bold text-left md:text-6xl 2xl:text-7xl">
+            {slide.split(/[,;]/).map((item, index) => (
+              <div className="leading-normal" key={index}>
+                {item}
+                <br />
+              </div>
+            ))}
           </p>
         </div>
       </div>
