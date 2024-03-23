@@ -1,19 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ILyric } from '../types';
+
 import Lyric from './Lyric';
+import { useLyricContext } from '../context/LyricContext';
 
 export const Title: React.FC = () => {
   const [startSlide, setStartSlide] = useState<boolean>(false);
-  const [lyricData, setLyricData] = useState<ILyric | null>();
-
-  useEffect(() => {
-    // Get the stored lyric from local storage and parse it as ILyric
-    const storedLyric: ILyric | null = JSON.parse(
-      localStorage.getItem('lyric') || 'null'
-    );
-    setLyricData(storedLyric);
-  }, [JSON.parse(localStorage.getItem('lyric') || 'null')]);
+  const { lyricData } = useLyricContext();
 
   return (
     <div className="flex items-center justify-center w-full h-screen py-4 mx-auto ">

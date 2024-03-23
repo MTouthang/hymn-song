@@ -1,13 +1,13 @@
 
 // lyrics dat 
-interface Verse {
+export interface Verse {
   verseNumber: number
   lyrics: string
 }
 
 export interface ILyric {
   _id: string
-  hymnNumber: number
+  hymnNumber: number    
   title: string 
   key: string
   verses: Verse []

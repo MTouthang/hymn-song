@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { ILyricData } from '../types';
+import { ILyric, ILyricData } from '../types';
 
 import { IData, IError } from '../types';
+import { useLyricContext } from '../context/LyricContext';
 
 const Home: React.FC = () => {
   const [data, setData] = useState<IData | undefined>();
   const [error, setError] = useState<IError | undefined>();
+  const { lyricData, setLyricData } = useLyricContext();
 
   const getLyricData = async () => {
     try {
@@ -28,8 +30,9 @@ const Home: React.FC = () => {
       const res = await axios.get<ILyricData>(
         `http://localhost:8080/api/v1/lyric/${lyricId}`
       );
+      setLyricData({ ...res.data.lyric });
 
-      localStorage.setItem('lyric', JSON.stringify(res.data.lyric));
+      // localStorage.setItem('lyric', JSON.stringify(res.data.lyric));
     } catch (err) {
       console.log('error', err);
     }
