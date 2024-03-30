@@ -19,6 +19,7 @@ export const createLyric = asyncHandler(async (req: Request, res: Response, next
   const { hymnNumber, title, key, verses, chorus, composer } = req.body;
 
   // Check if any required fields are missing
+  // TODO: hymnNumber should cant be negative (handle incase of negative value is entered)
   const requiredFields = ['hymnNumber', 'title','verses'];
   if (requiredFields.some(field => !req.body[field])) {
    return next(new AppError('Missing required fields', 400)) 
