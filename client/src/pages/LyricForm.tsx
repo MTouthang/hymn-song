@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 const LyricForm = () => {
+  const [inputs, setInputs] = useState<string[]>(['']); // for dynamic input
+
+  const addInput = () => {
+    setInputs([...inputs, '']);
+  };
+
+  const removeInput = (index: number) => {
+    const newInputs = [...inputs];
+    newInputs.splice(index, 1);
+    setInputs(newInputs);
+  };
+
+  const handleInputChange = (
+    index: number,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const newInputs = [...inputs];
+    newInputs[index] = event.target.value;
+    setInputs(newInputs);
+  };
+
   return (
     <div className="flex flex-col w-full p-8 mx-auto mt-20 bg-white rounded-lg shadow-md md:w-1/2 ">
       <h2 className="mb-1 text-lg font-medium text-center text-gray-900 title-font">
@@ -80,24 +101,23 @@ const LyricForm = () => {
       </div>
 
       {/* Add verse */}
-      {/* chorus */}
+
       <div className="relative mb-4">
         <p className="text-sm leading-7 text-gray-600"> Add Verses</p>
         <div className="ml-5">
-          <input
-            placeholder="Verse Number"
-            type="string"
-            id="composer"
-            name="composer"
-            className="w-full px-3 py-1 mb-2 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          />
-          <textarea
-            placeholder="Vahchoi jingun, chungnung pena loupi, Chungnung chu vahchoiyun; Vahchoi jingun,Pakai le Leng chu vahchoi jingun"
-            id="message"
-            name="chorus"
-            className="w-full h-32 px-3 py-1 text-base leading-6 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none resize-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          ></textarea>
-          <button> Add more verse</button>
+          {inputs.map((input, index) => (
+            <>
+              <input
+                key={index}
+                value={input}
+                onChange={(e) => handleInputChange(index, e)}
+                placeholder={`Verse ${index + 1}`}
+                className="w-full px-3 py-1 mb-2 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+              />
+              <button onClick={() => removeInput(index)}>Remove verse </button>
+            </>
+          ))}
+          <button onClick={addInput}>Add more verse</button>
         </div>
       </div>
 
