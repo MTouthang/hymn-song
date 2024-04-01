@@ -1,17 +1,34 @@
-import React, { ChangeEvent, useState } from 'react';
+import { useEffect, ChangeEvent, useState } from 'react';
 import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
+import { ILyricFormData, IVerses } from '../types';
+import axios, { AxiosResponse } from 'axios';
+
+// TODO: clear the input after submit and integrate with toastify
+const initialState: ILyricFormData = {
+  hymnNumber: NaN,
+  title: '',
+  key: '',
+  verses: [],
+};
 
 const LyricForm = () => {
-  const [inputs, setInputs] = useState<string[]>(['']); // for dynamic input
+  const [inputs, setInputs] = useState<IVerses[]>([]); // for dynamic input & verses
+  const [lyric, setLyric] = useState<ILyricFormData>(initialState);
 
   const addInput = () => {
-    setInputs([...inputs, '']);
+    setInputs([...inputs, { verseNumber: 0, lyrics: '' }]);
   };
 
   const removeInput = (index: number) => {
     const newInputs = [...inputs];
     newInputs.splice(index, 1);
+
+    // Decrement the verseNumber of subsequent inputs
+    for (let i = index; i < newInputs.length; i++) {
+      newInputs[i].verseNumber--;
+    }
+
     setInputs(newInputs);
   };
 
@@ -20,8 +37,30 @@ const LyricForm = () => {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const newInputs = [...inputs];
-    newInputs[index] = event.target.value;
+    newInputs[index] = {
+      ...newInputs[index],
+      verseNumber: index + 1,
+      lyrics: event.target.value,
+    };
     setInputs(newInputs);
+  };
+
+  useEffect(() => {
+    setLyric((prevLyric) => ({ ...prevLyric, verses: inputs }));
+  }, [inputs]);
+
+  const handleLyricSubmission = async () => {
+    console.log('input data', lyric);
+    try {
+      const response: AxiosResponse<ILyricFormData> =
+        await axios.post<ILyricFormData>(
+          'http://localhost:8080/api/v1/lyric/',
+          lyric
+        );
+      console.log(response);
+    } catch (error) {
+      console.log('Error add lyric data the database - ', error);
+    }
   };
 
   return (
@@ -43,6 +82,10 @@ const LyricForm = () => {
           type="number"
           id="hymnNumber"
           name="hymnNumber"
+          value={lyric?.hymnNumber || 1}
+          onChange={(e) =>
+            setLyric({ ...lyric, hymnNumber: Number(e.target.value) })
+          }
           className="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         />
       </div>
@@ -57,6 +100,8 @@ const LyricForm = () => {
           type="string"
           id="title"
           name="title"
+          value={lyric?.title || ''}
+          onChange={(e) => setLyric({ ...lyric, title: e.target.value })}
           className="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         />
       </div>
@@ -71,6 +116,8 @@ const LyricForm = () => {
           type="string"
           id="key"
           name="key"
+          value={lyric?.key || ''}
+          onChange={(e) => setLyric({ ...lyric, key: e.target.value })}
           className="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         />
       </div>
@@ -85,6 +132,8 @@ const LyricForm = () => {
           type="string"
           id="composer"
           name="composer"
+          value={lyric?.composer || ''}
+          onChange={(e) => setLyric({ ...lyric, composer: e.target.value })}
           className="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         />
       </div>
@@ -98,42 +147,47 @@ const LyricForm = () => {
           placeholder="Vahchoi jingun, chungnung pena loupi, Chungnung chu vahchoiyun; Vahchoi jingun,Pakai le Leng chu vahchoi jingun"
           id="message"
           name="chorus"
+          value={lyric?.chorus || ''}
+          onChange={(e) => setLyric({ ...lyric, chorus: e.target.value })}
           className="w-full h-32 px-3 py-1 text-base leading-6 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none resize-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         ></textarea>
       </div>
 
       {/* Add verse */}
-
+      {/* TODO: fix htmlInputvalue htmlareainput */}
       <div className="relative mb-4">
         <p className="text-sm leading-7 text-gray-600"> Add Verses</p>
         <div className="ml-5">
-          {inputs.map((input, index) => (
-            <div className="flex items-center gap-1">
-              <input
+          {inputs.map((_input, index) => (
+            <div className="flex items-center my-2">
+              <textarea
                 key={index}
-                value={input}
                 onChange={(e) => handleInputChange(index, e)}
-                placeholder={`Verse ${index + 1}`}
-                className="w-full px-3 py-1 mb-2 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                placeholder="Add verse"
+                className="w-full h-32 px-3 py-1 text-base leading-6 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none resize-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
-
-              <CiCircleRemove
-                className="w-8 h-6 text-gray-500 hover:text-red-300"
-                title="Remove verse"
-                onClick={() => removeInput(index)}
-              />
+              {index === inputs.length - 1 && (
+                <CiCircleRemove
+                  className="w-8 h-6 text-gray-500 hover:text-red-300"
+                  title="Remove verse"
+                  onClick={() => removeInput(index)}
+                />
+              )}
             </div>
           ))}
 
           <IoIosAddCircleOutline
-            className="w-8 h-6 text-gray-500 hover:text-green-400"
+            className="w-8 h-6 text-gray-500 hover:text-green-600"
             title="add verse"
             onClick={addInput}
           />
         </div>
       </div>
 
-      <button className="px-6 py-2 text-lg text-white bg-indigo-500 border-0 rounded focus:outline-none hover:bg-indigo-600">
+      <button
+        className="px-6 py-2 text-lg text-white bg-indigo-500 border-0 rounded focus:outline-none hover:bg-indigo-600"
+        onClick={handleLyricSubmission}
+      >
         Submit
       </button>
       <p className="mt-3 text-xs text-center text-gray-500">

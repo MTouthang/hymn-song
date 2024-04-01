@@ -33,3 +33,19 @@ export interface ILyricData {
   message: string,
   lyric: ILyric
 }
+
+// Add lyric Form types 
+export interface ILyricFormData {
+  hymnNumber: number,
+  title: string,
+  key: string,
+  verses: Verse [],
+  chorus?: string
+  composer?: string
+}
+
+// verse type
+export interface IVerses {
+  verseNumber: number,
+  lyrics: string
+}
