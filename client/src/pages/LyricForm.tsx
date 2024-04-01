@@ -1,4 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
+import { CiCircleRemove } from 'react-icons/ci';
+import { IoIosAddCircleOutline } from 'react-icons/io';
 
 const LyricForm = () => {
   const [inputs, setInputs] = useState<string[]>(['']); // for dynamic input
@@ -106,7 +108,7 @@ const LyricForm = () => {
         <p className="text-sm leading-7 text-gray-600"> Add Verses</p>
         <div className="ml-5">
           {inputs.map((input, index) => (
-            <>
+            <div className="flex items-center gap-1">
               <input
                 key={index}
                 value={input}
@@ -114,10 +116,20 @@ const LyricForm = () => {
                 placeholder={`Verse ${index + 1}`}
                 className="w-full px-3 py-1 mb-2 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
-              <button onClick={() => removeInput(index)}>Remove verse </button>
-            </>
+
+              <CiCircleRemove
+                className="w-8 h-6 text-gray-500 hover:text-red-300"
+                title="Remove verse"
+                onClick={() => removeInput(index)}
+              />
+            </div>
           ))}
-          <button onClick={addInput}>Add more verse</button>
+
+          <IoIosAddCircleOutline
+            className="w-8 h-6 text-gray-500 hover:text-green-400"
+            title="add verse"
+            onClick={addInput}
+          />
         </div>
       </div>
 
