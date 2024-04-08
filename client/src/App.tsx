@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-
+        {/* TODO: add lyric prop types -  */}
       <Route path="lyric/slide" element={<Lyric />} />
       <Route path="/lyric/:lyricId" element={<Title />} />
       <Route path="/addlyrice@1434" element={<LyricForm />} />

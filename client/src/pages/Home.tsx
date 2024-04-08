@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { ILyric, ILyricData } from '../types';
+import { ILyricData } from '../types';
 
 import { IData, IError } from '../types';
 import { useLyricContext } from '../context/LyricContext';

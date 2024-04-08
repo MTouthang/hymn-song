@@ -3,6 +3,8 @@ import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ILyricFormData, IVerses } from '../types';
 import axios, { AxiosResponse } from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import { toastOptions } from '../helper/toastOption';
 
 // TODO: clear the input after submit and integrate with toastify
 const initialState: ILyricFormData = {
@@ -57,14 +59,19 @@ const LyricForm = () => {
           'http://localhost:8080/api/v1/lyric/',
           lyric
         );
-      console.log(response);
+      if(response?.data) {
+        toast.success("lyric added successfully")
+        setLyric(initialState)
+      }
     } catch (error) {
       console.log('Error add lyric data the database - ', error);
     }
   };
 
   return (
-    <div className="flex flex-col w-full p-8 mx-auto mt-20 bg-white rounded-lg shadow-md md:w-1/2 ">
+    <>
+      <div className="flex flex-col w-full p-8 mx-auto mt-20 bg-white rounded-lg shadow-md md:w-1/2 ">
+      
       <h2 className="mb-1 text-lg font-medium text-center text-gray-900 title-font">
         Add Lyric Form
       </h2>
@@ -144,7 +151,7 @@ const LyricForm = () => {
           Chorus
         </label>
         <textarea
-          placeholder="Vahchoi jingun, chungnung pena loupi, Chungnung chu vahchoiyun; Vahchoi jingun,Pakai le Leng chu vahchoi jingun"
+          placeholder="Add chorus it it's available"
           id="message"
           name="chorus"
           value={lyric?.chorus || ''}
@@ -194,6 +201,8 @@ const LyricForm = () => {
         Kindly double check the lyric content before submitting
       </p>
     </div>
+    </>
+    
   );
 };
 

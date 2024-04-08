@@ -28,12 +28,13 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
                 {item.verseNumber}. {item.lyrics.slice(0, 10)}...
               </li>
             ))}
-            <li onClick={() => setSlide(data.chorus)}>chorus</li>
+            {data?.chorus &&   <li onClick={() => setSlide(data.chorus)}>chorus</li>}
+          
             <Link to={'/'}> Home</Link>
           </ul>
         </div>
         <div className="w-full mx-auto text-center ">
-          <p className="font-bold text-left md:text-7xl 2xl:text-8xl">
+          <p className="font-bold text-left md:text-6xl 2xl:text-7xl">
             {slide.split(/[,;]/).map((item, index) => (
               <div className="leading-normal" key={index}>
                 {item}
