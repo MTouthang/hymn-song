@@ -77,7 +77,7 @@ export const getAllLyrics = asyncHandler(async (req: Request, res: Response, nex
 
   const { title, hymnNumber, page, limit } = req.query
   const PAGE: number = Number(page) || 1
-  const LIMIT: number = Number(limit) || 10
+  const LIMIT: number = Number(limit) || 100
 
   const startIndex = (PAGE - 1) * LIMIT
 

@@ -6,6 +6,8 @@ import { ILyricData } from '../types';
 import { IData, IError } from '../types';
 import { useLyricContext } from '../context/LyricContext';
 
+import { handleErrorToast, handleSuccessToast } from '../helper/toastify';
+
 const Home: React.FC = () => {
   const [data, setData] = useState<IData | undefined>();
   const [error, setError] = useState<IError | undefined>();
@@ -28,13 +30,16 @@ const Home: React.FC = () => {
   const handleDataToLocalStorage = async (lyricId: string) => {
     try {
       const res = await axios.get<ILyricData>(
-        `http://localhost:8080/api/v1/lyric/${lyricId}`
+        `http://localhost:8080/api/v1/lyri/${lyricId}`
       );
       setLyricData({ ...res.data.lyric });
+      handleSuccessToast('Hym data fetch successfully')
 
       // localStorage.setItem('lyric', JSON.stringify(res.data.lyric));
     } catch (err) {
-      console.log('error', err);
+      if(error instanceof AxiosError){
+        handleErrorToast(error.response?.data.message)
+      }
     }
   };
 

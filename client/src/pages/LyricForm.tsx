@@ -2,11 +2,14 @@ import { useEffect, ChangeEvent, useState } from 'react';
 import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ILyricFormData, IVerses } from '../types';
-import axios, { AxiosResponse } from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import { toastOptions } from '../helper/toastOption';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
-// TODO: clear the input after submit and integrate with toastify
+import { ToastContainer } from 'react-toastify';
+import { handleErrorToast, handleSuccessToast } from '../helper/toastify';
+
+
+
+
 const initialState: ILyricFormData = {
   hymnNumber: NaN,
   title: '',
@@ -51,8 +54,10 @@ const LyricForm = () => {
     setLyric((prevLyric) => ({ ...prevLyric, verses: inputs }));
   }, [inputs]);
 
+ 
+
   const handleLyricSubmission = async () => {
-    console.log('input data', lyric);
+   
     try {
       const response: AxiosResponse<ILyricFormData> =
         await axios.post<ILyricFormData>(
@@ -60,11 +65,19 @@ const LyricForm = () => {
           lyric
         );
       if(response?.data) {
-        toast.success("lyric added successfully")
+        handleSuccessToast("Hymn Lyric added successfully")
+
+        // clear input
+        setInputs([])
         setLyric(initialState)
+        
+       
       }
     } catch (error) {
-      console.log('Error add lyric data the database - ', error);
+      if(error instanceof AxiosError){
+        handleErrorToast(error.response?.data.message)
+      }
+      
     }
   };
 
@@ -72,7 +85,9 @@ const LyricForm = () => {
     <>
       <div className="flex flex-col w-full p-8 mx-auto mt-20 bg-white rounded-lg shadow-md md:w-1/2 ">
       
-      <h2 className="mb-1 text-lg font-medium text-center text-gray-900 title-font">
+      <h2 className="mb-1 text-lg font-medium text-center text-gray-900 title-font"
+       
+      >
         Add Lyric Form
       </h2>
       <p className="mb-5 leading-relaxed text-center text-gray-600">
