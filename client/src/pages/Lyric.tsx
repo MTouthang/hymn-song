@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import { ILyric } from '../types';
 import { useLyricContext } from '../context/LyricContext';
 
@@ -21,16 +21,19 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
         <div className="items-center justify-center w-32 2xl:w-40 bg-dark-50 ">
           <ul className="items-center text-left">
             {lyricData.verses.map((item) => (
-              <li
+              <li 
+                className='text-gray-400 hover:cursor-pointer hover:text-gray-700'
                 key={item.verseNumber}
                 onClick={() => handleSlide(item.lyrics)}
               >
                 {item.verseNumber}. {item.lyrics.slice(0, 10)}...
               </li>
             ))}
-            {data?.chorus &&   <li onClick={() => setSlide(data.chorus)}>chorus</li>}
+            {data?.chorus &&   <li onClick={() => setSlide(data.chorus)}
+            
+            className='cursor-pointer'>chorus</li>}
           
-            <Link to={'/'}> Home</Link>
+        
           </ul>
         </div>
         <div className="w-full mx-auto text-center ">
