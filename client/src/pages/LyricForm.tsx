@@ -3,8 +3,6 @@ import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ILyricFormData, IVerses } from '../types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-
-import { ToastContainer } from 'react-toastify';
 import { handleErrorToast, handleSuccessToast } from '../helper/toastify';
 
 
@@ -59,6 +57,18 @@ const LyricForm = () => {
   const handleLyricSubmission = async () => {
    
     try {
+      
+      // clean to remove \n 
+      const cleanVerse = lyric.verses.map((verse) => ({
+          ...verse,
+          lyrics: verse.lyrics.replace(/\n/g, '')
+      })  )
+
+      const cleanChorus = lyric.chorus && lyric.chorus.replace(/\n/g, '')
+
+      lyric.chorus = cleanChorus
+      lyric.verses = cleanVerse
+      
       const response: AxiosResponse<ILyricFormData> =
         await axios.post<ILyricFormData>(
           'http://localhost:8080/api/v1/lyric/',
@@ -80,6 +90,8 @@ const LyricForm = () => {
       
     }
   };
+
+  
 
   return (
     <>
