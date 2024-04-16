@@ -8,10 +8,11 @@ import { useLyricContext } from '../context/LyricContext';
 
 import { handleErrorToast, handleSuccessToast } from '../helper/toastify';
 
+
 const Home: React.FC = () => {
   const [data, setData] = useState<IData | undefined>();
   const [error, setError] = useState<IError | undefined>();
-  const { lyricData, setLyricData } = useLyricContext();
+  const { setLyricData } = useLyricContext();
 
   const getLyricData = async () => {
     try {
@@ -30,12 +31,13 @@ const Home: React.FC = () => {
   const handleDataToLocalStorage = async (lyricId: string) => {
     try {
       const res = await axios.get<ILyricData>(
-        `http://localhost:8080/api/v1/lyri/${lyricId}`
+        `http://localhost:8080/api/v1/lyric/${lyricId}`
       );
       setLyricData({ ...res.data.lyric });
-      handleSuccessToast('Hym data fetch successfully')
+      // TODO: toast toggle error
+      // handleSuccessToast('Hym data fetch successfully')
 
-      // localStorage.setItem('lyric', JSON.stringify(res.data.lyric));
+      
     } catch (err) {
       if(error instanceof AxiosError){
         handleErrorToast(error.response?.data.message)
@@ -49,6 +51,7 @@ const Home: React.FC = () => {
 
   return (
     <>
+   
       <section className="text-gray-600 body-font">
         <div className="flex flex-col items-center justify-center px-5 py-24 mx-auto ">
           <div className="flex items-end justify-center w-full">
