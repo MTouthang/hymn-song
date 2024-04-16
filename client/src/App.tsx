@@ -5,9 +5,16 @@ import { Title } from './pages/Title';
 import LyricForm from './pages/LyricForm';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { useLyricContext } from './context/LyricContext';
+
+
 
 
 function App() {
+  const { lyricData } = useLyricContext();
+  console.log(lyricData)
+
+ 
   return (
     <>
       <ToastContainer
@@ -25,8 +32,8 @@ function App() {
       <ToastContainer />
     <Routes>
       <Route path="/" element={<Home />} />
-        {/* TODO: add lyric prop types -  */}
-      <Route path="lyric/slide" element={<Lyric />} />
+      
+      <Route path="lyric/slide" element={<Lyric data={lyricData} />} />
       <Route path="/lyric/:lyricId" element={<Title />} />
       <Route path="/addlyrice@1434" element={<LyricForm />} />
     </Routes>
