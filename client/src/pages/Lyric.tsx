@@ -4,7 +4,7 @@ import { ILyric } from '../types';
 import { useLyricContext } from '../context/LyricContext';
 
 interface LyricProps {
-  data: ILyric; // Explicitly type the data prop
+  data: ILyric ; // Explicitly type the data prop
 }
 const Lyric: React.FC<LyricProps> = ({ data }) => {
   const [slide, setSlide] = useState<string>(data.verses[0].lyrics);
