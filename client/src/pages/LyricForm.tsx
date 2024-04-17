@@ -2,8 +2,9 @@ import { useEffect, ChangeEvent, useState } from 'react';
 import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ILyricFormData, IVerses } from '../types';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { handleErrorToast, handleSuccessToast } from '../helper/taoster';
+import { AddLyric } from '../helper/api';
 
 
 
@@ -69,11 +70,14 @@ const LyricForm = () => {
       lyric.chorus = cleanChorus
       lyric.verses = cleanVerse
       
-      const response: AxiosResponse<ILyricFormData> =
-        await axios.post<ILyricFormData>(
-          'http://localhost:8080/api/v1/lyric/',
-          lyric
-        );
+      // const response: AxiosResponse<ILyricFormData> =
+      //   await axios.post<ILyricFormData>(
+      //     'http://localhost:8080/api/v1/lyric/',
+      //     lyric
+      //   );
+
+      const response = await AddLyric(lyric)
+      
       if(response?.data) {
         handleSuccessToast("Hymn Lyric added successfully")
 
@@ -81,7 +85,6 @@ const LyricForm = () => {
         setInputs([])
         setLyric(initialState)
         
-       
       }
     } catch (error) {
       if(error instanceof AxiosError){

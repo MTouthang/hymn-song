@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { IData, ILyricData } from "../types";
+import { IData, ILyricData, ILyricFormData } from "../types";
 const endPoint: string = "https://hymn-song-services.onrender.com"
 
 // get all the lyrics
@@ -26,4 +26,24 @@ export const getParticularLyric = async(id:string): Promise<ILyricData> => {
         return Promise.reject(error);
     }
   };
+
+  // add or post lyric from 
+  export const AddLyric = async(lyric:ILyricFormData) => {
+    try {
+    
+      const response: AxiosResponse<ILyricFormData> =
+        await axios.post<ILyricFormData>(
+          `${endPoint}/api/v1/lyric/`,
+          lyric
+        );
+        return response
+     
+      }
+     catch (error) {
+      
+        return Promise.reject(error)
+  }
+  }
+
+
 
