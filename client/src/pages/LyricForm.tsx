@@ -1,4 +1,4 @@
-import { useEffect, ChangeEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ILyricFormData, IVerses } from '../types';
@@ -38,7 +38,7 @@ const LyricForm = () => {
 
   const handleInputChange = (
     index: number,
-    event: ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const newInputs = [...inputs];
     newInputs[index] = {
