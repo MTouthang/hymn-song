@@ -1,57 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { ILyricData } from '../types';
 
-import { IData, IError } from '../types';
+
+import { IData } from '../types';
 import { useLyricContext } from '../context/LyricContext';
 
-import { handleErrorToast, handleSuccessToast } from '../helper/toastify';
+import { handleErrorToast } from '../helper/taoster';
+import { fetLyrics, getParticularLyric } from '../helper/api';
 
 
 const Home: React.FC = () => {
   const [data, setData] = useState<IData | undefined>();
-  const [error, setError] = useState<IError | undefined>();
+  const [error, setError] = useState<string | undefined>();
   const { setLyricData } = useLyricContext();
+  
 
-  const getLyricData = async () => {
-    try {
-      const res = await axios.get<IData>('http://localhost:8080/api/v1/lyric');
+  const [isLoading, setIsLoading] = useState<boolean>(true); // State to track loading state
 
-      setData(res.data);
-    } catch (err) {
-      const errorObject = err as AxiosError;
-      setError({
-        message: errorObject.message,
-        code: errorObject.code,
-      });
-    }
-  };
+  useEffect (() => {
+    const fetchData = async () => {
 
-  const handleDataToLocalStorage = async (lyricId: string) => {
-    try {
-      const res = await axios.get<ILyricData>(
-        `http://localhost:8080/api/v1/lyric/${lyricId}`
-      );
-      setLyricData({ ...res.data.lyric });
-      // TODO: toast toggle error
-      // handleSuccessToast('Hym data fetch successfully')
-
-      
-    } catch (err) {
-      if(error instanceof AxiosError){
-        handleErrorToast(error.response?.data.message)
+      try {
+         const data = await fetLyrics(); // Call the fetchLyrics function to fetch data
+         setData(data)
+         setIsLoading(false)
+      } catch (error) {
+        setError("Error fetching lyrics."); // Set error message
+        setIsLoading(false); // Set loading state to false
       }
     }
-  };
+    fetchData()
 
-  useEffect(() => {
-    getLyricData();
-  }, []);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
+  
+  // In your component where you want to call getParticularLyric:
+const handleGetParticularLyric = async (id:string) => {
+ 
+  try {
+    const lyricData = await getParticularLyric(id);
+    console.log(lyricData);
+
+    setLyricData({ ...lyricData.lyric });
+    
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      handleErrorToast(error.response?.data.message);
+    }
+  }
+};
+
+
 
   return (
     <>
-   
+      {isLoading}
       <section className="text-gray-600 body-font">
         <div className="flex flex-col items-center justify-center px-5 py-24 mx-auto ">
           <div className="flex items-end justify-center w-full">
@@ -76,7 +81,7 @@ const Home: React.FC = () => {
               <div>
                 {error ? (
                   <>
-                    <p>Loading data error: {error.message}</p>
+                    <p>Loading data error: {error}</p>
                   </>
                 ) : data ? (
                   <ul className="space-y-2">
@@ -86,8 +91,11 @@ const Home: React.FC = () => {
                           {item.hymnNumber}.
                         </span>
                         <Link
-                          onClick={() => handleDataToLocalStorage(item._id)}
                           to={`lyric/${item._id}`}
+                          onClick={() => 
+                          
+                            handleGetParticularLyric(item._id)}
+                          
                         >
                           {' '}
                           {item.title.toUpperCase()}

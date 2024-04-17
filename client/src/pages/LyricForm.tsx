@@ -3,7 +3,7 @@ import { CiCircleRemove } from 'react-icons/ci';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ILyricFormData, IVerses } from '../types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { handleErrorToast, handleSuccessToast } from '../helper/toastify';
+import { handleErrorToast, handleSuccessToast } from '../helper/taoster';
 
 
 

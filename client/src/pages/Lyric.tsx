@@ -32,8 +32,6 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
             {data?.chorus &&   <li onClick={() => setSlide(data.chorus)}
             
             className='cursor-pointer'>chorus</li>}
-          
-        
           </ul>
         </div>
         <div className="w-full mx-auto text-center ">

@@ -8,10 +8,6 @@ export const Title: React.FC = () => {
   const [startSlide, setStartSlide] = useState<boolean>(false);
   const { lyricData } = useLyricContext();
 
- 
-  
-  
-
   return (
     <div className="flex items-center justify-center w-full h-screen py-4 mx-auto ">
       <div className="flex flex-col items-center py-4">
