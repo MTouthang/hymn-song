@@ -1,6 +1,11 @@
 {
     "rewrites": [
-      { "source": "/[^.]*", "destination": "/index.html" }
+      
+        {
+          "source": "/feedback/((?!general).*)",
+          "destination": "/api/feedback/general"
+        }
+      
     ]
   }
   
