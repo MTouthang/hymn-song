@@ -1,10 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import { IData, ILyricData, ILyricFormData } from "../types";
-const endPoint: string = "https://hymn-song-services.onrender.com"
+
+// dev env and production env
+const endPoint: string | undefined = import.meta.env.VITE_ENPOINT || import.meta.env.VITE_ENPOINT_PROD
 
 // get all the lyrics
 // TODO: pagination pending 
 export const fetLyrics = async(): Promise<IData | undefined> => {
+  
     try {
         const response:AxiosResponse<IData> = await axios.get<IData>(`${endPoint}/api/v1/lyric`);
         return response.data
@@ -18,7 +21,7 @@ export const fetLyrics = async(): Promise<IData | undefined> => {
 // get a particular lyric by providing the ID
 export const getParticularLyric = async(id:string): Promise<ILyricData> => {
     try {
-        const res = await axios.get<ILyricData>(`https://hymn-song-services.onrender.com/api/v1/lyric/${id}`);
+        const res = await axios.get<ILyricData>(`${endPoint}/api/v1/lyric/${id}`);
         console.log(res)
         return res.data
 
