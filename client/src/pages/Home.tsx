@@ -11,7 +11,7 @@ import { fetLyrics, getParticularLyric } from '../helper/api';
 
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<IData | undefined>();
+  const [data, setData] = useState<IData | object>();
   const [error, setError] = useState<string | undefined>();
   const { setLyricData } = useLyricContext();
   
