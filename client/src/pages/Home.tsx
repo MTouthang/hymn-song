@@ -11,7 +11,7 @@ import { fetLyrics, getParticularLyric } from '../helper/api';
 
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<IData | object>();
+  const [data, setData] = useState<IData | undefined>();
   const [error, setError] = useState<string | undefined>();
   const { setLyricData } = useLyricContext();
   
@@ -76,7 +76,9 @@ const handleGetParticularLyric = async (id:string) => {
 
           {/* HOUBUNG LA */}
           <h2 className="py-5"> HOUBUNG LA </h2>
-          <div className="flex flex-col w-5/6 ">
+          <div className="flex flex-col w-5/6 bg-top bg-no-repeat bg-opacity-200 bg-hero-bg-image"
+           
+          >
             <div>
               <div>
                 {error ? (
