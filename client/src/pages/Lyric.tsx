@@ -11,6 +11,8 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
   const [slide, setSlide] = useState<string>(lyricData.verses[0]?.lyrics || '');
   const [index, setIndex] = useState<number>(0);
 
+ 
+  //  key stroke for up and down
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
@@ -63,9 +65,11 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
   }
 
   return (
-    <>
-      <div className="flex items-center w-full py-10 mx-auto 2xl:w-5/6 border-dark-100 ">
+    <div>
+      <div className="flex items-center w-full mx-auto border-dark-100 ">
+       
         <div className="items-center justify-center w-32 2xl:w-40 bg-dark-50 ">
+      
           <ul className="items-center text-left">
             {lyricData.verses.map((item, index) => (
               <li 
@@ -83,10 +87,10 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
             className='cursor-pointer'>chorus</li>}
           </ul>
         </div>
-        <div className="w-full mx-auto text-center ">
-          <p className="font-bold text-left md:text-6xl 2xl:text-7xl">
+        <div className="w-[1100px] xl:w-[1600px] text-center h-min-[600px] flex justify-center items-center px-8 shadow-2xl py-10 border">
+          <p className="w-full font-bold text-left md:text-5xl 2xl:text-7xl">
             {slide.split(/[,;]/).map((item, index) => (
-              <div className="leading-normal" key={index}>
+              <div className="w-full py-2" key={index}>
                 {item}
                 <br />
               </div>
@@ -94,7 +98,7 @@ const Lyric: React.FC<LyricProps> = ({ data }) => {
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
