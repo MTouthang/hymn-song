@@ -2,7 +2,10 @@ import axios, { AxiosResponse } from "axios";
 import { IData, ILyricData, ILyricFormData } from "../types";
 
 // dev env and production env
-const endPoint: string | undefined = import.meta.env.VITE_ENPOINT || import.meta.env.VITE_ENPOINT_PROD
+const endPoint: string | undefined = import.meta.env.VITE_ENDPOINT_DEV || import.meta.env.VITE_ENPOINT_PROD
+
+console.log(import.meta.env.VITE_ENDPOINT_DEV)
+console.log(import.meta.env.VITE_ENPOINT_PROD)
 
 // get all the lyrics
 // TODO: pagination pending 
